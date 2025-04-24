@@ -11,7 +11,8 @@ public class CameraFollow : MonoBehaviour
 
     [Space(1)]
     [Header("Limits")]
-    public Vector2 _limits = new Vector2(5, 3);
+    public Vector2 _startLimits = new Vector2(5, 3);
+    private Vector2 _limits = new Vector2(0, 0);
 
     [Space(1)]
     [Header("Smooth Damp Time")]
@@ -43,12 +44,44 @@ public class CameraFollow : MonoBehaviour
         transform.localPosition = Vector3.SmoothDamp(localPos, new Vector3(targetLocalPos.x + _offset.x, targetLocalPos.y + _offset.y, localPos.z), ref _velocity, _smoothTime);
     }
 
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
+    {
+        DrawCameraBounds();
+    }
+
+    private void DrawCameraBounds()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawLine(new Vector3(-_limits.x, -_limits.y, transform.position.z), new Vector3(_limits.x, -_limits.y, transform.position.z));
-        Gizmos.DrawLine(new Vector3(-_limits.x, _limits.y, transform.position.z), new Vector3(_limits.x, _limits.y, transform.position.z));
-        Gizmos.DrawLine(new Vector3(-_limits.x, -_limits.y, transform.position.z), new Vector3(-_limits.x, _limits.y, transform.position.z));
-        Gizmos.DrawLine(new Vector3(_limits.x, -_limits.y, transform.position.z), new Vector3(_limits.x, _limits.y, transform.position.z));
+
+        Vector3 offset = new Vector3(_offset.x, _offset.y, _offset.z);
+
+        Vector3 topLeft = new Vector3(
+            transform.position.x - (_startLimits.x / 2) + offset.x,
+            transform.position.y + (_startLimits.y / 2) + offset.y,
+            transform.position.z + offset.z
+        );
+
+        Vector3 topRight = new Vector3(
+            transform.position.x + (_startLimits.x / 2) + offset.x,
+            transform.position.y + (_startLimits.y / 2) + offset.y,
+            transform.position.z + offset.z
+        );
+
+        Vector3 bottomLeft = new Vector3(
+            transform.position.x - (_startLimits.x / 2) + offset.x,
+            transform.position.y - (_startLimits.y / 2) + offset.y,
+            transform.position.z + offset.z
+        );
+
+        Vector3 bottomRight = new Vector3(
+            transform.position.x + (_startLimits.x / 2) + offset.x,
+            transform.position.y - (_startLimits.y / 2) + offset.y,
+            transform.position.z + offset.z
+        );
+
+        Gizmos.DrawLine(topLeft, topRight);
+        Gizmos.DrawLine(topLeft, bottomLeft);
+        Gizmos.DrawLine(topRight, bottomRight);
+        Gizmos.DrawLine(bottomLeft, bottomRight);
     }
 }

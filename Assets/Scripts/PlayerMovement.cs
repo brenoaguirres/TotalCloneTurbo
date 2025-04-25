@@ -89,8 +89,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void RotationLook(float h, float v, float speed)
     {
-        _aimTarget.parent.position = Vector3.zero;
-        _aimTarget.localPosition = new Vector3(h, v, 1);
+        _aimTarget.parent.localPosition = Vector3.zero;
+        _aimTarget.localPosition = new Vector3(transform.localPosition.x + h, transform.localPosition.y + v, 10);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, 
             Quaternion.LookRotation(_aimTarget.position), Mathf.Deg2Rad * speed * Time.deltaTime);
     }

@@ -67,7 +67,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetButtonDown("Fire1") || Input.GetButtonDown("Fire2"))
         {
-            ScreenLogManager.Instance.LogMessage($"Player did a barrel roll");
+            //ScreenLogManager.Instance.LogMessage($"Player did a barrel roll");
             int dir = Input.GetButtonDown("Fire1") ? -1 : 1;
             QuickSpin(dir);
         }
@@ -89,8 +89,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void RotationLook(float h, float v, float speed)
     {
+        _aimTarget.parent.position = Vector3.zero;
         _aimTarget.localPosition = new Vector3(h, v, 1);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(_aimTarget.position), Mathf.Deg2Rad * speed);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, 
+            Quaternion.LookRotation(_aimTarget.position), Mathf.Deg2Rad * speed * Time.deltaTime);
     }
 
     private void HorizontalLean(Transform target, float axis, float leanLimit, float lerpTime)
